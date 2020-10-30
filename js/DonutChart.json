@@ -1,0 +1,45 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "width": 500,
+  "height": 600,
+  "title": "Wildlife Export Country Rank from 2016 to 2017",
+  "data": {
+    "url": "https://raw.githubusercontent.com/XuanErinChen/FIT3179/main/data/WildlifeTrade.csv"
+  },
+  "params": [
+    {
+      "name": "rank_selection",
+      "bind": {
+        "input": "range",
+        "min": 3,
+        "max": 12,
+        "step": 1,
+        "name": "Rank Number: "
+      }
+    }
+  ],
+  "transform": [
+    {
+      "aggregate": [
+        {
+          "op": "sum",
+          "field": "ExporterReportedQuantity",
+          "as": "Quantity Exported"
+        }
+      ],
+      "groupby": ["Export"]
+    },
+    {
+      "window": [{"op": "rank", "as": "rank"}],
+      "sort": [{"field": "Quantity Exported", "order": "descending"}]
+    },
+    {"filter": "datum.rank <= rank_selection||datum.rank<=3"}
+  ],
+  "mark": {"type": "arc", "innerRadius": 50, "tooltip": {"content": "data"}},
+  "encoding": {
+    "theta": {"field": "Quantity Exported", "type": "quantitative"},
+    "color": {"field": "Export", "type": "nominal"}
+  },
+  "view": {"stroke": null},
+  "config": {}
+}
