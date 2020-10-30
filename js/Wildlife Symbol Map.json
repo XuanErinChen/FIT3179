@@ -1,0 +1,72 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "description": "the population per state, engineers per state, and hurricanes per state",
+  "repeat": {"row": ["ImporterReportedQuantity", "ExporterReportedQuantity"]},
+  "resolve": {"scale": {"size": "independent"}},
+  "spec": {
+    "width": 1000,
+    "height": 500,
+    "projection": {"type": "equalEarth"},
+    "layer": [
+      {
+        "data": {
+          "url": "https://raw.githubusercontent.com/XuanErinChen/FIT3179/main/js/map.json",
+          "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+        },
+        "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "white"}
+      },
+      {
+        "data": {"graticule": true},
+        "mark": {"type": "geoshape", "stroke": "lightgray", "strokeWidth": 0.5}
+      },
+      {
+        "data": {
+          "url": "https://raw.githubusercontent.com/XuanErinChen/FIT3179/main/data/WildlifeTrade.csv"
+        },
+        "transform": [
+          {"filter": {"not": {"field": "Import", "equal": "#N/A"}}},
+          {"filter": {"not": {"field": "Export", "equal": "#N/A"}}},
+          {
+            "calculate": "datum.ImporterReportedQuantity + datum.ExporterReportedQuantity",
+            "as": "Total Trade Number"
+          },
+          {
+            "calculate": "datum.ImporterReportedQuantity",
+            "as": "Total Import Trade Number"
+          },
+          {"calculate": "datum.App", "as": "Appendix"},
+          {"calculate": "datum.Export", "as": "Country"}
+        ],
+        "mark": {"type": "circle"},
+        "encoding": {
+          "longitude": {"field": "ExportLon", "type": "quantitative"},
+          "latitude": {"field": "ExportLan", "type": "quantitative"},
+          "size": {
+            "field": {"repeat": "row"},
+            "type": "quantitative",
+            "scale": {
+              "type": "threshold",
+              "domain": [100, 1000, 10000, 100000, 1000000, 5000000],
+              "range": [10, 50, 100, 150, 200, 300, 400]
+            },
+            "legend": {"format": ".1s"}
+          },
+          "tooltip": [
+            {"field": "Country", "type": "nominal"},
+            {"field": "Import", "type": "nominal"},
+            {"field": "Export", "type": "nominal"},
+            {"field": {"repeat": "row"}, "type": "quantitative"},
+            {"field": "Total Trade Number", "type": "quantitative"},
+            {"field": "App", "type": "nominal"}
+          ],
+          "color": {
+            "field": "App",
+            "type": "nominal",
+            "scale": {"scheme": "category20b"}
+          }
+        }
+      }
+    ]
+  },
+  "config": {}
+}
