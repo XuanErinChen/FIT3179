@@ -1,0 +1,84 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "width": 400,
+  "height": 600,
+  "title": "Wildlife Exporter Rank from 2016 to 2017",
+  "data": {
+    "url": "https://raw.githubusercontent.com/XuanErinChen/FIT3179/main/data/WildlifeTrade.csv"
+  },
+  "params": [
+    {
+      "name": "rank_selection",
+      "bind": {
+        "input": "range",
+        "min": 3,
+        "max": 10,
+        "step": 1,
+        "name": "Rank Number: "
+      }
+    }
+  ],
+  "transform": [
+    {"calculate": "datum.Export", "as": "Exporter"},
+    {
+      "aggregate": [
+        {
+          "op": "sum",
+          "field": "ExporterReportedQuantity",
+          "as": "Quantity Exported"
+        }
+      ],
+      "groupby": ["Exporter"]
+    },
+    {
+      "window": [{"op": "rank", "as": "rank"}],
+      "sort": [{"field": "Quantity Exported", "order": "descending"}]
+    },
+    {"filter": "datum.rank <= rank_selection||datum.rank<=3"}
+  ],
+  "layer": [
+    {
+      "mark": {
+        "type": "arc",
+        "innerRadius": 50,
+        "tooltip": {"content": "encoding"}
+      },
+      "encoding": {
+        "theta": {"field": "Quantity Exported", "type": "quantitative"},
+        "color": {
+          "field": "Exporter",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "China",
+              "Cote d'Ivoire",
+              "France",
+              "Georgia",
+              "Indonesia",
+              "Japan",
+              "Netherlands",
+              "Turkey",
+              "United Arab Emirates",
+              "United States"
+            ],
+            "range": [
+              "lightBlue",
+              "Gold",
+              "darkorange",
+              "Purple",
+              "Darkblue",
+              "Grey",
+              "Violet",
+              "wheat",
+              "Lightgrey",
+              "black"
+            ]
+          },
+          "legend": {"legendX": 150, "legendY": 300}
+        }
+      }
+    }
+  ],
+  "view": {"stroke": null},
+  "config": {}
+}
