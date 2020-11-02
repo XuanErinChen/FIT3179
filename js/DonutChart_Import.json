@@ -1,7 +1,7 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-  "width": 400,
-  "height": 600,
+  "width": 350,
+  "height": 380,
   "title": "Wildlife Importer Rank from 2016 to 2017",
   "data": {
     "url": "https://raw.githubusercontent.com/XuanErinChen/FIT3179/main/data/WildlifeTrade.csv"
