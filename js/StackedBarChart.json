@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-  "width": 1200,
+  "width": 1100,
   "height": 250,
   "title": "Popular Wildlife Species by Category of Goods in Trade from 2016 to 2017",
   "data": {
